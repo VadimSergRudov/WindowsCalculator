@@ -9,7 +9,7 @@ import { ThemeProvider } from "@mui/material/styles";
 import { appTheme } from "./theme";
 
 const displayHistory = (history: HistoryItem[]) => {
-    let content = [];
+    const content = [];
     for (let i = history.length - 1; i >= 0; i--) {
         content.push(<Box>
             <Typography sx={{ textAlign: 'end' }}>{history[i].operationBody}</Typography>
@@ -20,8 +20,8 @@ const displayHistory = (history: HistoryItem[]) => {
 }
 
 const downloadFile = (text: string,) => {
-    let blob = new Blob([text], { type: "text/plain" });
-    let link = document.createElement("a");
+    const blob = new Blob([text], { type: "text/plain" });
+    const link = document.createElement("a");
     link.setAttribute("href", URL.createObjectURL(blob));
     link.setAttribute("download", "OperationResult");
     link.click();
@@ -80,22 +80,25 @@ function App() {
     const [isMemoryEnabled, setMemoryEnabled] = useState<boolean>(false);
     const [memory, setMemory] = useState<number>(0);
 
-    let operationResult: number = 0;
+    let operationResult = 0;
 
-    const input = useRef<HTMLDivElement>(null!);
+    const input = useRef<HTMLDivElement>(null); 
 
     useEffect(() => {
         const minSize = 1;
         const maxSize = 99;
         let size = maxSize;
-        do {
-            input.current.style.fontSize = size + "px";
-            size = size - 0.1;
-        } while (
-            (input.current.clientWidth < input.current.scrollWidth ||
-                input.current.clientHeight < input.current.scrollHeight) &&
-            size > minSize
-        );
+        if (input.current != null) {
+            do {
+                input.current.style.fontSize = size + "px";
+                size = size - 0.1;
+
+            } while (
+                (input.current.clientWidth < input.current.scrollWidth ||
+                    input.current.clientHeight < input.current.scrollHeight) &&
+                size > minSize
+            );
+        }
     }, [currentInput]);
 
 
@@ -126,7 +129,7 @@ function App() {
         resetOperationsRepeat();
         setDisableOperationBtns(false);
 
-        let additionalSymbol = e.currentTarget.value;
+        const additionalSymbol = e.currentTarget.value;
 
         if (currentInput === "0" && additionalSymbol === "0") {
             return;
@@ -160,9 +163,9 @@ function App() {
     // x^2
     const handleSqr = () => {
 
-        let value = Number(currentInput);
+        const value = Number(currentInput);
         let operationBody = "";
-        let result = String(value * value);
+        const result = String(value * value);
         if (!isFinite(value * value)) {
             setInitialStates();
             setCurrentInput("Overflow");
@@ -188,9 +191,9 @@ function App() {
 
     // √x
     const handleRootExtraction = () => {
-        let value = Number(currentInput);
+        const value = Number(currentInput);
         let operationBody = "";
-        let result = String(Math.sqrt(value));
+        const result = String(Math.sqrt(value));
         setCurrentInput(result);
 
         operationBody = repeatRootExtraction
@@ -216,8 +219,8 @@ function App() {
             setInitialStates();
         }
         else {
-            let value = Number(currentInput);
-            let result = String(1 / value);
+            const value = Number(currentInput);
+            const result = String(1 / value);
             let operationBody = "";
 
             setCurrentInput(result);
@@ -270,7 +273,7 @@ function App() {
             }
         }
         else {
-            let value: number = 0;
+            let value = 0;
             let operationBody = "";
             let operationResult = "";
             switch (e.currentTarget.value) {
@@ -358,23 +361,23 @@ function App() {
             setCurrenOperationExpression(prev => prev + currentInput + " = ");
             operationBody = currentOperationExpression + currentInput + " = "
         }
-        let calculationResult = calculation()
+        const calculationResult = calculation()
         setCurrentInput(calculationResult);
         setIsNewInput(true);
         setIsNewOperation(true);
         setRepeateOperation(true);
-        if (calculationResult != "Cannot divide by zero" && calculationResult != "Error"){
+        if (calculationResult != "Cannot divide by zero" && calculationResult != "Error") {
             setHistory(historyArr => [...historyArr, {
                 operationBody: operationBody,
                 result: String(operationResult)
             }])
             downloadFile(operationBody + String(operationResult));
         }
-            
+
     }
 
     const calculation = () => {
-        let value = repeatOperation ? secondSavedParam : Number(currentInput);
+        const value = repeatOperation ? secondSavedParam : Number(currentInput);
         if (currentOperation == Operation.Addition) {
             operationResult = firstSavedParam + value;
         }
@@ -417,7 +420,7 @@ function App() {
         setDisableOperationBtns(false);
     }
     const changeInputSign = () => {
-        let value = Number(currentInput);
+        const value = Number(currentInput);
         setCurrentInput(String(value * (-1)));
     }
 
@@ -600,7 +603,7 @@ function App() {
                                                 </IconButton>
                                             </Box>
                                         </Box>
-                                        : <Typography sx={{ ml: 2 }}>There's no history yet</Typography>}
+                                        : <Typography sx={{ ml: 2 }}>There is no history yet</Typography>}
                                 </Box>
                             )}
                             {tabValue === "memory" && (
@@ -613,7 +616,7 @@ function App() {
                                         }}>
                                             <Typography variant="h3">{memory}</Typography>
                                         </Box>
-                                        : <Typography sx={{ ml: 2 }}>There's nothing saved in memory</Typography>
+                                        : <Typography sx={{ ml: 2 }}>There is nothing saved in memory</Typography>
                                     }
                                 </Box>
                             )}
